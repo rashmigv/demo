@@ -3,48 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>web</title>
+    <title>My First Working Website</title>
     <style>
-        /* CSS to apply styles */
+        /* CSS for simple styling */
         body {
-            /* Sets a soft, light blue background for the entire page */
-            background-color: #f0f8ff; /* AliceBlue */
-            font-family: Arial, sans-serif;
-            margin: 0; /* Removes default browser margin */
-            padding: 20px;
+            /* Sets a light background and a clean font */
+            background-color: #f4f4f9;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            padding-top: 50px;
         }
 
         .container {
-            /* Styles for the content area to make it stand out */
+            /* Styles the main content area */
             background-color: white;
-            padding: 20px;
-            max-width: 600px; /* Limits the width of the text block */
-            margin: 50px auto; /* Centers the container block horizontally */
-            border-radius: 8px; /* Soft, rounded corners */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            padding: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
             color: #333;
-            border-bottom: 2px solid #ccc;
-            padding-bottom: 10px;
-            margin-top: 0;
+            margin-bottom: 20px;
         }
 
-        p {
-            color: #555;
-            line-height: 1.6;
-            margin-bottom: 15px;
+        button {
+            /* Styles the interactive button */
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>A Simple Website</h1>
+        <h1>Welcome to Your First Website!</h1>
 
-        <p>WELCOME</p>
-
-        <p> have a good day</p>
+        <p id="message">Click the button below to see some basic JavaScript in action.</p>
+        
+        <button id="actionButton">Click Me</button>
     </div>
+
+    <script>
+        // JavaScript for basic interactivity
+        document.getElementById('actionButton').addEventListener('click', function() {
+            // Changes the text of the paragraph when the button is clicked
+            document.getElementById('message').textContent = "Success! This demonstrates a simple event listener in JavaScript.";
+        });
+    </script>
+
 </body>
 </html>
