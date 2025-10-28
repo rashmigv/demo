@@ -3,29 +3,40 @@ from flask import Flask, jsonify, request, url_for, redirect
 # Initialize the Flask application
 app = Flask(__name__)
 
-# --- SIMULATED DATABASE (REPLACES SQLAlchemy) ---
-# In a real app, this data would come from Airtable, SQL, etc.
+# --- MODIFIED DATABASE TO TRIGGER ALL PII DETECTION ---
 USER_DATABASE = {
     "101": {
-        "name": "Jane Doe",
-        "email": "jane.doe@example.com",
-        "status": "Active"
+        "full_name": "Jane Doe",
+        "email_address": "jane.doe@example.com",
+        "status": "Active",
+        "date_of_birth": "1991-07-25",  # Added DOB
+        "ssn": "999-00-1234",          # High-Confidence PII Pattern
+        "card_last_4": "4111-XXXX",     # Financial/PCI Pattern
+        "ip_address": "192.168.1.10"   # Network PII Pattern
     },
     "102": {
-        "name": "Alex Smith",
-        "email": "alex.smith@example.com",
-        "status": "Inactive"
+        "full_name": "Alex Smith",
+        "email_address": "alex.smith@example.com",
+        "status": "Inactive",
+        "date_of_birth": "1985-03-10",
+        "ssn": "999-00-5678",
+        "card_last_4": "4222-XXXX",
+        "ip_address": "172.16.0.5"
     },
     "103": {
-        "name": "Test User",
-        "email": "test.user@example.com",
-        "status": "Pending"
+        "full_name": "Test User",
+        "email_address": "test.user@example.com",
+        "status": "Pending",
+        "date_of_birth": "1978-12-01",
+        "ssn": "999-00-9012",
+        "card_last_4": "4333-XXXX",
+        "ip_address": "10.0.0.2"
     }
 }
 # -------------------------------------------------
 
 
-# Route to retrieve user data by ID
+# Route to retrieve user data by ID (REST REMAINS UNCHANGED)
 @app.route('/api/user/<user_id>', methods=['GET'])
 def get_user_data(user_id):
     """
