@@ -4,67 +4,58 @@ from flask import Flask, jsonify, request
 app = Flask(__name__)
 
 # --- SIMULATED IN-MEMORY DATA STORE ---
-# Stores data submitted by the client (simulating a database)
+# Used to demonstrate the successful exchange of data
 CUSTOMER_RECORDS = {}
 NEXT_USER_ID = 1001 
+# -------------------------------------------------
 
-# Route to create a new user record (POST request)
+
+# Route to handle creation and exchange of sensitive user data
 @app.route('/api/user', methods=['POST'])
-def create_user():
+def handle_data_exchange():
     """
-    Accepts sensitive user data via JSON POST request and stores it.
+    Accepts, stores, and confirms exchange of sensitive user data (POST).
     """
     global NEXT_USER_ID
 
-    # Ensure the request contains JSON data
+    # 1. Input Validation and Extraction
     if not request.json:
-        return jsonify({"status": "error", "message": "Missing JSON data"}), 400
+        return jsonify({"status": "error", "message": "Missing JSON data in request."}), 400
 
-    # Extract required and sensitive data elements
     data = request.json
     
-    # 1. Core PII/Identity
-    full_name = data.get('full_name')
-    date_of_birth = data.get('date_of_birth')
-    
-    # 2. Financial/Sensitive Data
-    card_number = data.get('card_number')
-    
-    # Simple validation (ensure name is present)
-    if not full_name:
-        return jsonify({"status": "error", "message": "Missing required field: full_name"}), 400
-
-    # Structure the new record
+    # Extract all requested sensitive data elements
     new_record = {
         "user_id": NEXT_USER_ID,
-        "name": full_name,
-        "age": data.get('age'),
-        "date_of_birth": date_of_birth,
-        "credit_card": card_number,
-        "detection_flag": True
+        "full_name": data.get('full_name', 'N/A'),
+        "age": data.get('age', 'N/A'),
+        "date_of_birth": data.get('date_of_birth', 'N/A'),
+        "credit_card_details": data.get('credit_card_details', 'N/A'),
+        "is_sensitive_record": True 
     }
 
-    # Store and increment ID
+    # 2. Store and increment ID
+    # Simulates storing the complete PII and financial record securely
     CUSTOMER_RECORDS[str(NEXT_USER_ID)] = new_record
     NEXT_USER_ID += 1
 
     return jsonify({
         "status": "success",
-        "message": "User record created successfully and data elements exchanged.",
+        "message": "Sensitive user data received and stored.",
         "user_id": new_record['user_id']
     }), 201 # 201 Created
 
 
-# Route to retrieve a user record (GET request)
+# Route to retrieve the exchanged user data (GET request)
 @app.route('/api/user/<int:user_id>', methods=['GET'])
-def get_user(user_id):
+def retrieve_user_data(user_id):
     """
-    Retrieves a single user record by ID and returns all stored data.
+    Retrieves a single user record by ID, returning all exchanged data types.
     """
     record = CUSTOMER_RECORDS.get(str(user_id))
 
     if record:
-        # Success: Data is returned, including sensitive fields
+        # Success: All sensitive data elements are returned to the client
         return jsonify({
             "status": "success",
             "data": record
@@ -82,12 +73,14 @@ if __name__ == '__main__':
     # Initialize the first record for easy testing
     CUSTOMER_RECORDS["1000"] = {
         "user_id": 1000,
-        "name": "Initial Test Subject",
-        "age": 30,
-        "date_of_birth": "1995-01-01",
-        "credit_card": "4111-XXXX-XXXX-1111",
-        "detection_flag": True
+        "full_name": "Test Subject PII",
+        "age": 45,
+        "date_of_birth": "1980-06-15",
+        "credit_card_details": "5432-xxxx-xxxx-9012",
+        "is_sensitive_record": True
     }
+    global NEXT_USER_ID
     NEXT_USER_ID = 1001
     
+    # Note: Install Flask using 'pip install Flask' before running.
     app.run(debug=True)
